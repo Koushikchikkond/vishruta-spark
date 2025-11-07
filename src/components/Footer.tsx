@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import companyLogo from "@/assets/company-logo.png";
 
 const Footer = () => {
   const scrollToSection = (id: string) => {
@@ -14,12 +15,11 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 gradient-accent rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">V</span>
-              </div>
-              <span className="text-xl font-bold">VIShRuTa</span>
-            </div>
+            <img 
+              src={companyLogo} 
+              alt="Company Logo" 
+              className="h-16 w-auto"
+            />
             <p className="text-primary-foreground/80 leading-relaxed">
               Total Technology Solutions provider with 50+ years of expertise, serving global enterprises with ISO 27001 certified excellence.
             </p>
