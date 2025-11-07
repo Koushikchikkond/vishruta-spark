@@ -7,7 +7,7 @@ const Certifications = () => {
       icon: Shield,
       title: "ISO 27001 Certified",
       description: "First-generation certification in information security management systems, ensuring the highest standards of data protection and security.",
-      year: "2020"
+      year: "2025"
     },
     {
       icon: Award,

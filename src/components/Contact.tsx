@@ -6,6 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// ⬅️ add this near the imports (after useToast import is fine)
+const GAS_URL = import.meta.env.VITE_GAS_URL as string;
+
 const Contact = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
@@ -15,14 +18,44 @@ const Contact = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ⬅️ replace your current handleSubmit with this async version
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you shortly.",
-    });
-    setFormData({ name: "", email: "", company: "", message: "" });
+
+    try {
+      if (!GAS_URL) {
+        throw new Error("Missing VITE_GAS_URL (Apps Script Web App URL)");
+      }
+
+      // Build x-www-form-urlencoded body (simple request = no preflight)
+      const body = new URLSearchParams({
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        message: formData.message,
+      });
+
+      await fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors", // deliver request even if GAS doesn't return CORS headers
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body,
+      });
+
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for contacting us. We'll get back to you shortly.",
+      });
+      setFormData({ name: "", email: "", company: "", message: "" });
+    } catch (err: any) {
+      toast({
+        title: "Send failed",
+        description: err?.message || "Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -128,8 +161,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-primary mb-1">Email</h4>
-                      <p className="text-foreground">info@vishruta.com</p>
-                      <p className="text-foreground">support@vishruta.com</p>
+                      <p className="text-foreground">hemanth@vishruta.co.in</p>
+                      
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -138,7 +171,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-primary mb-1">Phone</h4>
-                      <p className="text-foreground">+91 (xxx) xxx-xxxx</p>
+                      <p className="text-foreground">+91 9663375272</p>
                       <p className="text-foreground">Available Mon-Fri, 9AM-6PM IST</p>
                     </div>
                   </div>
@@ -162,7 +195,7 @@ const Contact = () => {
               <CardContent className="p-0 overflow-hidden">
                 <div className="h-[400px] w-full">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799160891!2d-74.25987368715491!3d40.69767006458873!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQxJzUxLjYiTiA3NMKwMDAnMzUuNCJX!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4874.687658439204!2d77.56874907592439!3d12.997328914311955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae162fbd2fe7a1%3A0x5b727ad48aa1dd1f!2sViShRuTa%20Enterprises!5e1!3m2!1sen!2sin!4v1762494051791!5m2!1sen!2sin"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
