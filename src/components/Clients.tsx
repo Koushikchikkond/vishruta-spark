@@ -1,14 +1,20 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import toyotaLogo from "@/assets/client-toyota.png";
+import kiaLogo from "@/assets/client-kia.jpg";
+import vinfastLogo from "@/assets/client-vinfast.jpg";
+import adityaBirlaLogo from "@/assets/client-aditya-birla.webp";
+import schneiderLogo from "@/assets/client-schneider.webp";
+import ltLogo from "@/assets/client-lt.webp";
 
 const Clients = () => {
   const clients = [
-    "TOYOTA",
-    "KIA Motors",
-    "VINFAST",
-    "Aditya Birla",
-    "Schneider",
-    "L&T"
+    { name: "TOYOTA", logo: toyotaLogo },
+    { name: "KIA Motors", logo: kiaLogo },
+    { name: "VINFAST", logo: vinfastLogo },
+    { name: "Aditya Birla", logo: adityaBirlaLogo },
+    { name: "Schneider", logo: schneiderLogo },
+    { name: "L&T", logo: ltLogo }
   ];
 
   const testimonials = [
@@ -49,10 +55,11 @@ const Clients = () => {
                 key={index}
                 className="flex items-center justify-center p-6 bg-card rounded-lg shadow-soft hover:shadow-medium transition-smooth"
               >
-                <div className="text-center">
-                  <Building2 className="w-12 h-12 text-accent mx-auto mb-2" />
-                  <span className="text-lg font-bold text-primary">{client}</span>
-                </div>
+                <img 
+                  src={client.logo} 
+                  alt={`${client.name} logo`}
+                  className="w-full h-16 object-contain grayscale hover:grayscale-0 transition-smooth"
+                />
               </div>
             ))}
           </div>
@@ -64,24 +71,33 @@ const Clients = () => {
             What Our Clients Say
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="shadow-medium hover:shadow-strong transition-smooth">
-                <CardContent className="p-8">
-                  <div className="flex mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                    ))}
-                  </div>
-                  <p className="text-foreground mb-6 italic leading-relaxed">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="border-t border-border pt-4">
-                    <p className="font-bold text-primary">{testimonial.company}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.author}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {testimonials.map((testimonial, index) => {
+              const clientLogo = clients.find(c => c.name === testimonial.company)?.logo;
+              return (
+                <Card key={index} className="shadow-medium hover:shadow-strong transition-smooth">
+                  <CardContent className="p-8">
+                    <div className="flex mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    <p className="text-foreground mb-6 italic leading-relaxed">
+                      "{testimonial.text}"
+                    </p>
+                    <div className="border-t border-border pt-4">
+                      {clientLogo && (
+                        <img 
+                          src={clientLogo} 
+                          alt={`${testimonial.company} logo`}
+                          className="h-8 mb-2 object-contain"
+                        />
+                      )}
+                      <p className="text-sm text-muted-foreground">{testimonial.author}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>
